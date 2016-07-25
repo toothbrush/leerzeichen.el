@@ -1,6 +1,7 @@
 ;;; leerzeichen.el --- Minor mode to display whitespace characters.
 
 ;; Copyright (c) 2014-2015 Felix Geller
+;; Copyright (c) 2016 Paul van der Walt <paul@denknerd.org>
 
 ;; Author: Felix Geller <fgeller@gmail.com>
 ;; Keywords: whitespace characters
@@ -29,6 +30,9 @@
 ;; does, and it imposes little overhead by using a buffer local display table
 ;; rather than the font-lock functionality.
 
+;; Paul has modified it to only highlight tab characters (eeeevil) and
+;; later, perhaps, trailing whitespace.
+
 ;; More information: https://github.com/fgeller/leerzeichen.el/
 
 ;;; Code:
@@ -44,16 +48,12 @@
 (defvar leerzeichen-saved-buffer-display-table nil
   "Stored version of `buffer-display-table' before leerzeichen-mode was enabled.")
 
-(defvar leerzeichen-line-feed-glyph (make-glyph-code ?$ 'leerzeichen))
 (defvar leerzeichen-tab-glyph (make-glyph-code ?» 'leerzeichen))
-(defvar leerzeichen-space-glyph (make-glyph-code ?· 'leerzeichen))
 
 (defun leerzeichen-display-table ()
   "Display table to highlight whitespace characters."
   (let ((table (make-display-table)))
-    (aset table ?\n `[,leerzeichen-line-feed-glyph ?\n])
     (aset table ?\t (vconcat `[,leerzeichen-tab-glyph] (make-vector (1- tab-width) ? )))
-    (aset table ?\  `[,leerzeichen-space-glyph])
     table))
 
 (define-minor-mode leerzeichen-mode
